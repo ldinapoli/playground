@@ -1,3 +1,3 @@
 package com.example.pokemonLore.entities
 
-data class Pokemon(val name: String, val sprites: PokemonSprites)
+data class Pokemon(val name: String, val sprite: PokemonSprite)

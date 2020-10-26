@@ -14,5 +14,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun leagueLoreApiClient(): PokemonLoreApiClient = PokemonLoreApiClient()
+    fun pokemonLoreApiClient(): PokemonLoreApiClient = PokemonLoreApiClient("https://pokeapi.co/api/v2/")
 }

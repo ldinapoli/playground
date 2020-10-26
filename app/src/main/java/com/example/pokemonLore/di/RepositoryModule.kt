@@ -2,7 +2,7 @@ package com.example.pokemonLore.di
 
 import com.example.pokemonLore.api.PokemonLoreApiManager
 import com.example.pokemonLore.api.client.PokemonLoreApiClient
-import com.example.pokemonLore.repository.PokemonRepository
+import com.example.pokemonLore.repositories.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

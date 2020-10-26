@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -35,7 +34,11 @@ class PokemonDetailActivity : AppCompatActivity() {
 
         setup()
 
-        model.pokemonLiveData.observe(this, Observer { handlePokemonLiveData(it) })
+        model.pokemonLiveData.observe(this) { handlePokemonLiveData(it) }
+
+        model.pokemonListLiveData.observe(this) { handlePokemonList(it) }
+
+        model.getPokemonList()
 
         binding.pokemonDetailAnimation.setAnimation(R.raw.splash)
     }
@@ -48,12 +51,23 @@ class PokemonDetailActivity : AppCompatActivity() {
             is Response.Error -> {
                 binding.pokemonDetailName.text = response.exception.message
             }
+            else -> {
+            }
+        }
+    }
+
+    private fun handlePokemonList(response: Response<List<Pokemon>>) {
+        when (response) {
+            is Response.Success -> {
+                Toast.makeText(this, response.data[0].name, Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
         }
     }
 
     private fun setupPokemonData(pokemon: Pokemon) {
         binding.pokemonDetailName.text = pokemon.name
-        Glide.with(this).load(pokemon.sprites.frontDefault)
+        Glide.with(this).load(pokemon.sprite.frontDefault)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -89,11 +103,13 @@ class PokemonDetailActivity : AppCompatActivity() {
 
     private fun setup() {
         binding.pokemonDetailButton.setOnClickListener {
-            if (binding.pokemonDetailTextInput.text.isNotBlank()) {
+            try {
                 model.getPokemonById(binding.pokemonDetailTextInput.text.toString())
                 binding.pokemonDetailAnimation.isVisible = true
                 binding.pokemonDetailImage.isInvisible = true
                 hideKeyboard()
+            } catch(e: IllegalArgumentException) {
+                Log.e(this.toString(), "illegal argument")
             }
         }
     }
