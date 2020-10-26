@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PokemonLoreApiClient {
+class PokemonLoreApiClient() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://pokeapi.co/api/v2/")
@@ -16,12 +16,16 @@ class PokemonLoreApiClient {
         .build()
 
     private fun createClient(): OkHttpClient {
-        return OkHttpClient().newBuilder()
-            .addInterceptor(HttpLoggingInterceptor())
-            .build()
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
+
+        val httpClient = OkHttpClient.Builder()
+        httpClient.interceptors().add(logging)
+
+        return httpClient.build()
     }
 
-    fun <T> buildService(service: Class<T>): T {
+   fun <T> buildService(service: Class<T>): T {
         return retrofit.create(service)
     }
 }

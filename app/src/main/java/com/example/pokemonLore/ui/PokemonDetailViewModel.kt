@@ -1,5 +1,6 @@
 package com.example.pokemonLore.ui
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.pokemonLore.api.Response
@@ -8,19 +9,20 @@ import com.example.pokemonLore.repository.PokemonRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class PokemonDetailViewModel @Inject constructor(private val pokemonRepository: PokemonRepository): ViewModel() {
+class PokemonDetailViewModel @ViewModelInject constructor(
+    private val pokemonRepository: PokemonRepository
+) : ViewModel() {
 
     private var disposable: Disposable? = null
-    var pokemonLiveData = MutableLiveData< Response<Pokemon>>()
+    var pokemonLiveData = MutableLiveData<Response<Pokemon>>()
 
     fun getPokemonById(id: String) {
         disposable = pokemonRepository.getPokemonById(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { pokemonLiveData.value = Response.Loading }
-            .subscribe( { success -> pokemonLiveData.value = Response.Success(success) },
-                { error -> pokemonLiveData.value = Response.Error(error) } )
+            .subscribe({ success -> pokemonLiveData.value = Response.Success(success) },
+                { error -> pokemonLiveData.value = Response.Error(error) })
     }
 }

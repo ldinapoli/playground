@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">LeagueLore</string>
+    <string name="app_name">PokemonLore</string>
+
+    <!-- Pokemon Detail -->
+    <string name="pokemon_detail_image_content_description">Pokemon Image</string>
+    <string name="pokemon_detail_search_button">Buscar Pokemon</string>
 </resources>
