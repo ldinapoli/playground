@@ -13,5 +13,4 @@ class PokemonRepository @Inject constructor(private val pokemonLoreApiManager: P
             Pokemon(it.name)
         }
     }
-
 }

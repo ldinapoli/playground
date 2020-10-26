@@ -22,6 +22,5 @@ class PokemonDetailViewModel @Inject constructor(private val pokemonRepository: 
             .doOnSubscribe { pokemonLiveData.value = Response.Loading }
             .subscribe( { success -> pokemonLiveData.value = Response.Success(success) },
                 { error -> pokemonLiveData.value = Response.Error(error) } )
-
     }
 }

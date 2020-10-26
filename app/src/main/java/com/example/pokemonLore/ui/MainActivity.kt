@@ -3,14 +3,10 @@ package com.example.pokemonLore.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.example.pokemonLore.databinding.ActivityMainBinding
 import com.example.pokemonLore.entities.Pokemon
 import com.example.pokemonLore.repository.PokemonRepository
 import dagger.android.AndroidInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

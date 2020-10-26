@@ -33,6 +33,7 @@ class PokemonDetailActivity : AppCompatActivity() {
         when(response) {
             is Response.Success -> { binding.pokemoName.text = response.data.name }
             is Response.Error -> { binding.pokemoName.text = response.exception.message }
+            else -> {}
         }
     }
 }
