@@ -4,4 +4,9 @@
     <!-- Pokemon Detail -->
     <string name="pokemon_detail_image_content_description">Pokemon Image</string>
     <string name="pokemon_detail_search_button">Buscar Pokemon</string>
+    <string name="pokemon_detail_search_title">Busca un nuevo Pokemon</string>
+
+    <!-- Pokemon Main -->
+    <string name="main_button_up">&lt;&lt;</string>
+    <string name="main_button_down">&gt;&gt;</string>
 </resources>

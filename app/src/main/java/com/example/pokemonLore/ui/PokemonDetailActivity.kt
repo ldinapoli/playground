@@ -1,9 +1,11 @@
 package com.example.pokemonLore.ui
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isInvisible
@@ -23,24 +25,34 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PokemonDetailActivity : AppCompatActivity() {
 
+    companion object {
+        const val POKEMON_EXTRA = "pokemon_extra"
+    }
+
     private lateinit var binding: ActivityPokemonDetailBinding
 
     private val model: PokemonDetailViewModel by viewModels()
+
+    private val pokemon by lazy { getPokemonExtra(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPokemonDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setup()
+        setSupportActionBar(binding.pokemonDetailToolbar)
+
+        title = "Pokemon Detail"
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         model.pokemonLiveData.observe(this) { handlePokemonLiveData(it) }
 
-        model.pokemonListLiveData.observe(this) { handlePokemonList(it) }
-
-        model.getPokemonList()
-
         binding.pokemonDetailAnimation.setAnimation(R.raw.splash)
+
+        model.getPokemonById(pokemon.name)
+
+        setup()
     }
 
     private fun handlePokemonLiveData(response: Response<Pokemon>) {
@@ -53,15 +65,6 @@ class PokemonDetailActivity : AppCompatActivity() {
             }
             else -> {
             }
-        }
-    }
-
-    private fun handlePokemonList(response: Response<List<Pokemon>>) {
-        when (response) {
-            is Response.Success -> {
-                Toast.makeText(this, response.data[0].name, Toast.LENGTH_SHORT).show()
-            }
-            else -> {}
         }
     }
 
@@ -101,6 +104,10 @@ class PokemonDetailActivity : AppCompatActivity() {
             .into(binding.pokemonDetailImage)
     }
 
+    private fun getPokemonExtra(intent: Intent): Pokemon {
+        return intent.getParcelableExtra(POKEMON_EXTRA)
+    }
+
     private fun setup() {
         binding.pokemonDetailButton.setOnClickListener {
             try {
@@ -112,5 +119,15 @@ class PokemonDetailActivity : AppCompatActivity() {
                 Log.e(this.toString(), "illegal argument")
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

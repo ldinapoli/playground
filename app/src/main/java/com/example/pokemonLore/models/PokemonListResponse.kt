@@ -6,10 +6,10 @@ data class PokemonListResponse(
     @SerializedName("count") val count: String,
     @SerializedName("next") val next: String,
     @SerializedName("previous") val previous: String,
-    @SerializedName("results") val results: List<PokemonResponseFromListResponse>
+    @SerializedName("results") val results: List<PokemonFromListResponse>
 )
 
-data class PokemonResponseFromListResponse(
+data class PokemonFromListResponse(
     @SerializedName("name") val name: String,
     @SerializedName("url") val url: String
 )
