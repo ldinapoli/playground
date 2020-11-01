@@ -6,6 +6,8 @@ import com.example.pokemonLore.models.PokemonListResponse
 import com.example.pokemonLore.models.PokemonResponse
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class PokemonLoreApiManager @Inject constructor(pokemonLoreApiClient: PokemonLoreApiClient) {
@@ -16,4 +18,11 @@ class PokemonLoreApiManager @Inject constructor(pokemonLoreApiClient: PokemonLor
 
     fun getPokemonList(offSet: String, limit: String): Observable<PokemonListResponse> = pokemonLoreApi.getPokemonList(offSet, limit)
 
+    suspend fun getPokemonListFlow(offSet: String, limit: String) = flow {
+        emit(pokemonLoreApi.getPokemonListFlow(offSet, limit))
+    }
+
+    suspend fun getPokemonBydIdFlow(id: String) = flow {
+        emit(pokemonLoreApi.getPokemonByIdFlow(id))
+    }
 }

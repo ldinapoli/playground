@@ -7,13 +7,20 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokemonLore.api.Response
 import com.example.pokemonLore.databinding.ActivityMainBinding
 import com.example.pokemonLore.entities.Pokemon
 import com.example.pokemonLore.models.PokemonListResponse
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -31,8 +38,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        model.pokemonListLiveData.observe(this) { handlePokemonListResponse(it) }
-        model.getPokemonList(0)
+        lifecycleScope.launch {
+            model.pokemonListStateFlow.collect(::handlePokemonListResponse)
+        }
+
+        model.getPokemonListFlow(0)
         init()
     }
 
@@ -45,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             is Response.Loading -> {
                 toggleLoading()
             }
+            else -> {}
         }
     }
 
@@ -53,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainRecycler.isVisible = true
         binding.mainButtonDown.isEnabled = currentListSelected > 0
         binding.mainRecycler.layoutManager = LinearLayoutManager(this)
-        binding.mainRecycler.adapter = MainPokemonListAdapter(pokemonList) { pokemon -> pokemonListAdapterClick(pokemon) }
+        binding.mainRecycler.adapter = MainPokemonListAdapter(pokemonList, ::pokemonListAdapterClick)
     }
 
     private fun toggleLoading() {
@@ -69,13 +80,13 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         binding.mainButtonUp.setOnClickListener {
             currentListSelected += OFF_SET
-            model.getPokemonList(currentListSelected)
+            model.getPokemonListFlow(currentListSelected)
             binding.mainRecycler.isVisible = false
         }
         binding.mainButtonDown.setOnClickListener {
             if (currentListSelected > 0) {
                 currentListSelected -= OFF_SET
-                model.getPokemonList(currentListSelected)
+                model.getPokemonListFlow(currentListSelected)
                 binding.mainRecycler.isVisible = false
             }
         }

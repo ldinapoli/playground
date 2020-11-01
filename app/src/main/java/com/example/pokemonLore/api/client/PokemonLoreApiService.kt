@@ -15,4 +15,10 @@ interface PokemonLoreApiService {
 
     @GET("pokemon")
     fun getPokemonList(@Query("offset") offSet: String, @Query("limit") limit: String): Observable<PokemonListResponse>
+
+    @GET("pokemon/{id}")
+    suspend fun getPokemonByIdFlow(@Path("id") id: String): PokemonResponse
+
+    @GET("pokemon")
+    suspend fun getPokemonListFlow(@Query("offset") offSet: String, @Query("limit") limit: String): PokemonListResponse
 }
