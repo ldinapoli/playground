@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokemonLore.api.Response
 import com.example.pokemonLore.databinding.ActivityMainBinding
 import com.example.pokemonLore.entities.Pokemon
-import com.example.pokemonLore.models.PokemonListResponse
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

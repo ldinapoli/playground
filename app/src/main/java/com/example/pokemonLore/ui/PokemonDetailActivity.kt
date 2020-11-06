@@ -56,8 +56,10 @@ class PokemonDetailActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             model.pokemonStateFlow
-                    .catch { Toast.makeText(this@PokemonDetailActivity, "ups", Toast.LENGTH_SHORT).show() }
-                    .collect { handlePokemonLiveData(it) }
+                .catch {
+                    Toast.makeText(this@PokemonDetailActivity, "ups", Toast.LENGTH_SHORT).show()
+                }
+                .collect(::handlePokemonLiveData)
         }
 
         binding.pokemonDetailAnimation.setAnimation(R.raw.splash)
@@ -83,37 +85,37 @@ class PokemonDetailActivity : AppCompatActivity() {
     private fun setupPokemonData(pokemon: Pokemon) {
         binding.pokemonDetailName.text = pokemon.name
         Glide.with(this).load(pokemon.sprite.frontDefault)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        Toast.makeText(
-                                this@PokemonDetailActivity,
-                                "ups hubo un error",
-                                Toast.LENGTH_SHORT
-                        ).show()
-                        binding.pokemonDetailAnimation.isVisible = false
-                        Log.e("Glide error", e.toString())
-                        return false
-                    }
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Toast.makeText(
+                        this@PokemonDetailActivity,
+                        "ups hubo un error",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding.pokemonDetailAnimation.isVisible = false
+                    Log.e("Glide error", e.toString())
+                    return false
+                }
 
-                    override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        binding.pokemonDetailAnimation.isVisible = false
-                        binding.pokemonDetailImage.isInvisible = false
-                        return false
-                    }
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    binding.pokemonDetailAnimation.isVisible = false
+                    binding.pokemonDetailImage.isInvisible = false
+                    return false
+                }
 
-                })
-                .into(binding.pokemonDetailImage)
+            })
+            .into(binding.pokemonDetailImage)
     }
 
     private fun getPokemonExtra(intent: Intent): Pokemon {
@@ -122,14 +124,10 @@ class PokemonDetailActivity : AppCompatActivity() {
 
     private fun setup() {
         binding.pokemonDetailButton.setOnClickListener {
-            try {
-                model.getPokemonByIdFlow(binding.pokemonDetailTextInput.text.toString())
-                binding.pokemonDetailAnimation.isVisible = true
-                binding.pokemonDetailImage.isInvisible = true
-                hideKeyboard()
-            } catch (e: IllegalArgumentException) {
-                Log.e(this.toString(), "illegal argument")
-            }
+            model.getPokemonByIdFlow(binding.pokemonDetailTextInput.text.toString())
+            binding.pokemonDetailAnimation.isVisible = true
+            binding.pokemonDetailImage.isInvisible = true
+            hideKeyboard()
         }
     }
 

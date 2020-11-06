@@ -1,7 +1,10 @@
 package com.example.pokemonLore.entities
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Pokemon(val name: String, val sprite: PokemonSprite) : Parcelable
+@Entity
+data class Pokemon(@PrimaryKey val name: String, val sprite: PokemonSprite) : Parcelable
