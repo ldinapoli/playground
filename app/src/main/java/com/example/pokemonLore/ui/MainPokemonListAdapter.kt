@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pokemonLore.R
+import com.example.pokemonLore.databinding.MainPokemonListAdapterBinding
 import com.example.pokemonLore.entities.Pokemon
 import kotlinx.android.synthetic.main.main_pokemon_list_adapter.view.*
 
 class MainPokemonListAdapter(private val pokemonList: List<Pokemon>, private val clickListener: (Pokemon) -> Unit): RecyclerView.Adapter<MainPokemonListAdapter.TestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {
-        return TestViewHolder(LayoutInflater.from(parent.context).inflate(
-            R.layout.main_pokemon_list_adapter,
+        return TestViewHolder(MainPokemonListAdapterBinding.inflate(LayoutInflater.from(parent.context),
             parent,
             false
         ))
@@ -25,13 +25,17 @@ class MainPokemonListAdapter(private val pokemonList: List<Pokemon>, private val
         holder.bind(pokemonList[position], clickListener)
     }
 
-    inner class TestViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class TestViewHolder(private val pokemonListAdapterBinding: MainPokemonListAdapterBinding): RecyclerView.ViewHolder(pokemonListAdapterBinding.root) {
         fun bind(pokemon: Pokemon, clickListener: (Pokemon) -> Unit) {
+            pokemonListAdapterBinding.apply {
+                Glide.with(itemView.context)
+                        .load(pokemon.sprite.frontDefault)
+                        .into(pokemonListAdapterImage)
+
+                pokemonListAdapterName.text = pokemon.name
+            }
+
             itemView.setOnClickListener { clickListener(pokemon) }
-            Glide.with(itemView.context)
-                    .load(pokemon.sprite.frontDefault)
-                    .into(itemView.pokemon_list_adapter_image)
-            itemView.pokemon_list_adapter_name.text = pokemon.name
         }
     }
 }
